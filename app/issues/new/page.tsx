@@ -1,45 +1,75 @@
 "use client";
 
-import { Button, TextField } from "@radix-ui/themes";
+import { Button, Callout, Text, TextField } from "@radix-ui/themes";
 import { IoMdCheckmark } from "react-icons/io";
 import { Controller, useForm } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { createIssueSchema } from "@/app/validations";
 
-interface Issue {
-  title: string;
-  description: string;
-}
+type Issue = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const router = useRouter();
-  const { register, control, handleSubmit } = useForm<Issue>();
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Issue>({
+    resolver: zodResolver(createIssueSchema),
+  });
+  const [error, setError] = useState<string>("");
   return (
-    <form
-      className="max-w-xl space-y-3"
-      onSubmit={handleSubmit(async (data) => {
-        await axios.post("/api/issues", data);
-        router.push("/issues");
-      })}
-    >
-      <TextField.Root>
-        <TextField.Input placeholder="Title" {...register("title")} />
-      </TextField.Root>
-      <Controller
-        name="description"
-        control={control}
-        render={({ field }) => (
-          <SimpleMDE placeholder="Description" {...field} />
+    <div className="max-w-xl space-y-3">
+      {error && (
+        <Callout.Root>
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
+      <form
+        className="max-w-xl space-y-3"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await axios.post("/api/issues", data);
+            router.push("/issues");
+          } catch (error) {
+            setError("An unexpected error is occured.");
+          }
+        })}
+      >
+        <TextField.Root>
+          <TextField.Input placeholder="Title" {...register("title")} />
+        </TextField.Root>
+        {errors.title && (
+          <Text as="p" color="red">
+            {errors.title.message}
+          </Text>
         )}
-      />
-      <Button variant="solid">
-        <div className="flex items-center text-lg gap-2">
-          <IoMdCheckmark /> New issue
-        </div>
-      </Button>
-    </form>
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <SimpleMDE placeholder="Description" {...field} />
+          )}
+        />
+        {errors.description && (
+          <Text as="p" color="red">
+            {errors.description.message}
+          </Text>
+        )}
+        <Button variant="solid">
+          <div className="flex items-center text-lg gap-2">
+            <IoMdCheckmark /> New issue
+          </div>
+        </Button>
+      </form>
+    </div>
   );
 };
 
