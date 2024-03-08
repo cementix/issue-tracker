@@ -3,10 +3,15 @@ import { Inter } from "next/font/google";
 import NavBar from "@/app/components/NavBar";
 import { Theme } from "@radix-ui/themes";
 
-import "./globals.css";
 import "@radix-ui/themes/styles.css";
+import "./globals.css";
+import "./theme-config.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Issue-Tracker",
@@ -20,8 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Theme>
+      <body className={inter.variable}>
+        <Theme appearance="light" accentColor="crimson" radius="large">
           <NavBar />
           <main className="p-6">{children}</main>
         </Theme>

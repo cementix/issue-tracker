@@ -6,7 +6,7 @@ const IssuesPage = () => {
   return (
     <div>
       <Link href="/issues/new">
-        <Button variant="solid" color="crimson" style={{ cursor: "pointer" }}>
+        <Button variant="solid" style={{ cursor: "pointer" }}>
           <div className="flex items-center text-lg gap-2">
             <CiCirclePlus /> New issue
           </div>

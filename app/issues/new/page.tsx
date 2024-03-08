@@ -10,7 +10,7 @@ const NewIssuePage = () => {
         <TextField.Input placeholder="Title" />
       </TextField.Root>
       <TextArea placeholder="Description" />
-      <Button variant="solid" color="crimson" style={{ cursor: "pointer" }}>
+      <Button variant="solid">
         <div className="flex items-center text-lg gap-2">
           <IoMdCheckmark /> New issue
         </div>
