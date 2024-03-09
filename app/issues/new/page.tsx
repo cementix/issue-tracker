@@ -12,10 +12,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createIssueSchema } from "@/app/validations";
 import ErrorMessage from "@/app/components/ErrorMessage";
+import Loader from "@/app/components/Loader";
 
 type Issue = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
+  const [isSubmitting, setSubmitting] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -37,9 +39,11 @@ const NewIssuePage = () => {
         className="max-w-xl space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setSubmitting(true);
             await axios.post("/api/issues", data);
             router.push("/issues");
           } catch (error) {
+            setSubmitting(false);
             setError("An unexpected error is occured.");
           }
         })}
@@ -57,9 +61,9 @@ const NewIssuePage = () => {
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button variant="solid">
+        <Button variant="solid" disabled={isSubmitting}>
           <div className="flex items-center text-lg gap-2">
-            <IoMdCheckmark /> New issue
+            <IoMdCheckmark /> New issue {isSubmitting && <Loader />}
           </div>
         </Button>
       </form>
