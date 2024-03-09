@@ -11,6 +11,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createIssueSchema } from "@/app/validations";
+import ErrorMessage from "@/app/components/ErrorMessage";
 
 type Issue = z.infer<typeof createIssueSchema>;
 
@@ -46,11 +47,7 @@ const NewIssuePage = () => {
         <TextField.Root>
           <TextField.Input placeholder="Title" {...register("title")} />
         </TextField.Root>
-        {errors.title && (
-          <Text as="p" color="red">
-            {errors.title.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           control={control}
@@ -58,11 +55,8 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
-        {errors.description && (
-          <Text as="p" color="red">
-            {errors.description.message}
-          </Text>
-        )}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
+
         <Button variant="solid">
           <div className="flex items-center text-lg gap-2">
             <IoMdCheckmark /> New issue
