@@ -18,7 +18,9 @@ type Issue = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const [isSubmitting, setSubmitting] = useState(false);
+
   const router = useRouter();
+
   const {
     register,
     control,
@@ -27,7 +29,22 @@ const NewIssuePage = () => {
   } = useForm<Issue>({
     resolver: zodResolver(createIssueSchema),
   });
+
   const [error, setError] = useState<string>("");
+
+  const onSubmit = () => {
+    handleSubmit(async (data) => {
+      try {
+        setSubmitting(true);
+        await axios.post("/api/issues", data);
+        router.push("/issues");
+      } catch (error) {
+        setSubmitting(false);
+        setError("An unexpected error is occured.");
+      }
+    });
+  };
+
   return (
     <div className="max-w-xl space-y-3">
       {error && (
@@ -35,23 +52,14 @@ const NewIssuePage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form
-        className="max-w-xl space-y-3"
-        onSubmit={handleSubmit(async (data) => {
-          try {
-            setSubmitting(true);
-            await axios.post("/api/issues", data);
-            router.push("/issues");
-          } catch (error) {
-            setSubmitting(false);
-            setError("An unexpected error is occured.");
-          }
-        })}
-      >
+
+      <form className="max-w-xl space-y-3" onSubmit={onSubmit}>
         <TextField.Root>
           <TextField.Input placeholder="Title" {...register("title")} />
         </TextField.Root>
+
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
+
         <Controller
           name="description"
           control={control}
@@ -59,6 +67,7 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Description" {...field} />
           )}
         />
+
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button variant="solid" disabled={isSubmitting}>
