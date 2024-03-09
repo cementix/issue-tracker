@@ -5,7 +5,13 @@ import { AiFillBug } from "react-icons/ai";
 import classNames from "classnames";
 import { usePathname } from "next/navigation";
 import { Button, Separator } from "@radix-ui/themes";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  OrganizationSwitcher,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import { FaUser } from "react-icons/fa";
 
 const NavBar = () => {
@@ -14,6 +20,7 @@ const NavBar = () => {
   const links = [
     { label: "Dashboard", href: "/" },
     { label: "Issues", href: "/issues" },
+    { label: "Organizations", href: "/organizations" },
   ];
 
   return (
@@ -38,20 +45,22 @@ const NavBar = () => {
             ))}
           </ul>
         </div>
+        <div className="flex gap-7">
+          <SignedIn>
+            <UserButton />
+            <OrganizationSwitcher />
+          </SignedIn>
 
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-
-        <SignedOut>
-          <Link href="/sign-in">
-            <Button>
-              <div className="flex items-center gap-3">
-                <FaUser /> Sign In
-              </div>
-            </Button>
-          </Link>
-        </SignedOut>
+          <SignedOut>
+            <Link href="/sign-in">
+              <Button>
+                <div className="flex items-center gap-3">
+                  <FaUser /> Sign In
+                </div>
+              </Button>
+            </Link>
+          </SignedOut>
+        </div>
       </div>
       <Separator size="4" />
     </nav>

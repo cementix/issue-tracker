@@ -27,12 +27,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.variable}>
-          <Theme appearance="light" accentColor="crimson" radius="large">
-            <NavBar />
-            <main className="p-6">{children}</main>
-          </Theme>
-        </body>
+        <body className={inter.variable}>{children}</body>
       </html>
     </ClerkProvider>
   );
