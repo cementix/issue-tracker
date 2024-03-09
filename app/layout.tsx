@@ -6,6 +6,7 @@ import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import "./globals.css";
 import "./theme-config.css";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,13 +25,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.variable}>
-        <Theme appearance="light" accentColor="crimson" radius="large">
-          <NavBar />
-          <main className="p-6">{children}</main>
-        </Theme>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.variable}>
+          <Theme appearance="light" accentColor="crimson" radius="large">
+            <NavBar />
+            <main className="p-6">{children}</main>
+          </Theme>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
