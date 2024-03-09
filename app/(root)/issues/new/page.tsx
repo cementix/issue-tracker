@@ -1,10 +1,8 @@
 "use client";
 
-import { Button, Callout, Text, TextField } from "@radix-ui/themes";
+import { Button, Callout, Text, TextArea, TextField } from "@radix-ui/themes";
 import { IoMdCheckmark } from "react-icons/io";
 import { Controller, useForm } from "react-hook-form";
-import SimpleMDE from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -60,13 +58,7 @@ const NewIssuePage = () => {
 
         <ErrorMessage>{errors.title?.message}</ErrorMessage>
 
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <SimpleMDE placeholder="Description" {...field} />
-          )}
-        />
+        <TextArea {...register("description")} />
 
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
