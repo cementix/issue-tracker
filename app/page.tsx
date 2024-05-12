@@ -1,7 +1,7 @@
 export default function Home() {
   return (
     <main className="">
-      <p>Sosal</p>
+      <p className="text-primary">NIGGA</p>
     </main>
   );
 }

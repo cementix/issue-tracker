@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 100% 100%; /* white */
+    --primary: 0 0 0; /* black */
+    --secondary: 334 63% 50%; /* pink */
+    --primaryMuted: 222.2 84% 4.9%;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: 0 0 0; /* black */
+    --primary: 255 100% 100%; /* white */
+    --secondary: 334 50% 65%; /* pink */
+    --primaryMuted: 222.2 84% 4.9%;
+  }
+}
+
+body {
+  color: rgb(var(--primary));
+  background-color: rgb(var(--background));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
