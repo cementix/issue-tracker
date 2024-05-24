@@ -5,7 +5,6 @@ import Navbar from "@/components/dashboard/Navbar";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 import "@radix-ui/themes/styles.css";
-import { Theme } from "@radix-ui/themes";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -23,10 +22,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${montserrat.className} bg-background text-primary`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Theme>
-            <Navbar />
-            <main>{children}</main>
-          </Theme>
+          <Navbar />
+          <main>{children}</main>
         </ThemeProvider>
       </body>
     </html>
