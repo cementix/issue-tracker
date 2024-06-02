@@ -17,15 +17,15 @@ const Navbar = (props: NavbarProps) => {
   return (
     <nav className="flex space-x-6 p-3 border-b justify-between">
       <div className="flex items-center gap-8">
-        <Bug size={30} className="text-secondary" />
+        <Bug size={30} className="text-foreground" />
         <ul className="flex text-xl gap-4">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               className={`${
-                link.href === currentPath ? "text-secondary-muted" : ""
-              } hover:text-secondary`}
+                link.href === currentPath ? "text-primary" : ""
+              } hover:text-primary duration-100 text-foreground font-medium`}
             >
               {link.label}
             </Link>
