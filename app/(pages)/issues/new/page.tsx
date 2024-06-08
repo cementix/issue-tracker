@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { Loader } from "lucide-react";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(255, "Title is too long"),
@@ -27,6 +29,7 @@ const formSchema = z.object({
 const NewIssuePage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,23 +40,29 @@ const NewIssuePage = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     try {
-      // await axios.post("/api/issues", values);
+      await axios.post("/api/issues", values);
       toast({
         title: "Success",
         className: "bg-emerald-600 text-white border-black",
         description: "You have successfully added a new issue!",
       });
+      setIsLoading(false);
+      document.location.reload();
+      router.push("/");
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Unexpected Error!",
         description: "Oops! Unhandled error occured!",
       });
+      setIsLoading(false);
     }
   }
+
   return (
-    <div className="w-[500px] flex ml-8 mt-7">
+    <div className="w-[500px] flex">
       {" "}
       <Form {...form}>
         <form
@@ -86,8 +95,8 @@ const NewIssuePage = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
-            Submit
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? <Loader className="animate-spin" /> : "Submit"}
           </Button>
         </form>
       </Form>

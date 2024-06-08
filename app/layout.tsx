@@ -22,7 +22,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-background`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
-          <main>{children}</main>
+          <main className="ml-8 mt-7">{children}</main>
           <Toaster />
         </ThemeProvider>
       </body>
