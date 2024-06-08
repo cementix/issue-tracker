@@ -20,6 +20,8 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { Loader } from "lucide-react";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(255, "Title is too long"),
@@ -89,7 +91,7 @@ const NewIssuePage = () => {
               <FormItem>
                 <FormLabel className="text-lg">Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Insert your description" {...field} />
+                  <SimpleMDE placeholder="Description" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
