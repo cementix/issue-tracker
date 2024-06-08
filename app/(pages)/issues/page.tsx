@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import prisma from "@/lib/db";
+import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -32,10 +33,13 @@ const IssuesPage = async () => {
               <TableRow key={issue.id}>
                 <TableCell className="font-medium">
                   {issue.title}
-                  <p className="block md:hidden">{issue.status}</p>
+                  <IssueStatusBadge
+                    className="block max-w-fit md:hidden"
+                    status={issue.status}
+                  />
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {issue.status}
+                  <IssueStatusBadge status={issue.status} />
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
                   {issue.createdAt.toDateString()}
