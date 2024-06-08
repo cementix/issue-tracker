@@ -11,15 +11,15 @@ const statusMap: Record<IssueStatus, { label: string; color: string }> = {
   CLOSED: { label: "Closed", color: "bg-green-600 hover:bg-green-300" },
 };
 
-type IssueStatusBadgeType = {
+type IssueStatusBadgeProps = {
   status: IssueStatus;
   className?: string;
 };
 
-const IssueStatusBadge = ({ status, className }: IssueStatusBadgeType) => {
+const IssueStatusBadge = ({ status, className }: IssueStatusBadgeProps) => {
   const badgeColor = statusMap[status].color;
   return (
-    <Badge className={`${className} ${badgeColor}`}>
+    <Badge className={`${className} ${badgeColor} text-white`}>
       {statusMap[status].label}
     </Badge>
   );

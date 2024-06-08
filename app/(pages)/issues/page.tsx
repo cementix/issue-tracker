@@ -9,6 +9,7 @@ import {
 import prisma from "@/lib/db";
 import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
 import IssueActions from "./IssueActions";
+import Link from "next/link";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -27,11 +28,13 @@ const IssuesPage = async () => {
           {issues.map((issue) => (
             <TableRow key={issue.id}>
               <TableCell className="font-medium">
-                {issue.title}
-                <IssueStatusBadge
-                  className="table-cell max-w-fit md:hidden"
-                  status={issue.status}
-                />
+                <Link href={`/issues/${issue.id}`}>
+                  {issue.title}
+                  <IssueStatusBadge
+                    className="table-cell max-w-fit md:hidden"
+                    status={issue.status}
+                  />
+                </Link>
               </TableCell>
               <TableCell className="hidden md:table-cell">
                 <IssueStatusBadge status={issue.status} />
