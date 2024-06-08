@@ -11,9 +11,9 @@ const IssueDetails = ({ issue }: { issue: Issue }) => {
         <IssueStatusBadge status={issue.status} />{" "}
         <p>{issue.createdAt.toDateString()}</p>
       </div>
-      <Card className="max-w-[600px] prose text-xl">
+      <Card className="max-w-[2000px] w-full prose text-xl">
         <CardContent className="py-4">
-          <ReactMarkdown className="max-w-[600px]">
+          <ReactMarkdown className="max-w-[800px]">
             {issue.description}
           </ReactMarkdown>
         </CardContent>

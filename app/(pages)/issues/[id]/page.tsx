@@ -1,6 +1,7 @@
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
 
+import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
 
@@ -18,7 +19,10 @@ const IssuePage = async ({ params }: { params: { id: string } }) => {
   return (
     <main className="grid md:grid-cols-2 grid-cols-1 gap-5">
       <IssueDetails issue={issue} />
-      <EditIssueButton issueId={issue.id} />
+      <div className="flex gap-3 flex-col">
+        <EditIssueButton issueId={issue.id} />
+        <DeleteIssueButton issueId={issue.id} />
+      </div>
     </main>
   );
 };
