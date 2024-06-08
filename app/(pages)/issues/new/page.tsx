@@ -97,7 +97,11 @@ const NewIssuePage = () => {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full font-bold"
+            disabled={isLoading}
+          >
             {isLoading ? <Loader className="animate-spin" /> : "Submit"}
           </Button>
         </form>

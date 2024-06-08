@@ -1,3 +1,4 @@
+import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
 import {
   Table,
   TableBody,
@@ -7,9 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import prisma from "@/lib/db";
-import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
-import IssueActions from "./IssueActions";
 import Link from "next/link";
+import IssueActions from "./IssueActions";
 
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
@@ -27,9 +27,11 @@ const IssuesPage = async () => {
         <TableBody>
           {issues.map((issue) => (
             <TableRow key={issue.id}>
-              <TableCell className="font-medium">
+              <TableCell className="font-medium ">
                 <Link href={`/issues/${issue.id}`}>
-                  {issue.title}
+                  <p className="text-blue-500 hover:underline hover:text-blue-700">
+                    {issue.title}
+                  </p>
                   <IssueStatusBadge
                     className="table-cell max-w-fit md:hidden"
                     status={issue.status}
