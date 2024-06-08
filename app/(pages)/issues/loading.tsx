@@ -1,19 +1,20 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
 } from "@/components/ui/table";
-import prisma from "@/lib/db";
-import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
+
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import IssueActions from "./IssueActions";
 
-const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+const IssuesLoadingPage = () => {
+  const issues = [1, 2, 3, 4, 5];
   return (
-    <main>
+    <div>
       <IssueActions />
       <Table className="max-w-[1000px]">
         <TableHeader>
@@ -25,26 +26,22 @@ const IssuesPage = async () => {
         </TableHeader>
         <TableBody>
           {issues.map((issue) => (
-            <TableRow key={issue.id}>
+            <TableRow key={issue}>
               <TableCell className="font-medium">
-                {issue.title}
-                <IssueStatusBadge
-                  className="table-cell max-w-fit md:hidden"
-                  status={issue.status}
-                />
+                <Skeleton />
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                <IssueStatusBadge status={issue.status} />
+                <Skeleton />
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {issue.createdAt.toDateString()}
+                <Skeleton />
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-    </main>
+    </div>
   );
 };
 
-export default IssuesPage;
+export default IssuesLoadingPage;
