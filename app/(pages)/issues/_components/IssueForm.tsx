@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { Issue } from "@prisma/client";
 import "easymde/dist/easymde.min.css";
-import { Loader } from "lucide-react";
+import { Loader, Plus, SquarePenIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import SimpleMDE from "react-simplemde-editor";
@@ -43,28 +43,53 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    try {
-      await axios.post("/api/issues", values);
-      toast({
-        title: "Success",
-        className: "bg-emerald-600 text-white border-black",
-        description: "You have successfully added a new issue!",
-      });
-      setIsLoading(false);
-      router.push("/issues");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Unexpected Error!",
-        description: "Oops! Unhandled error occured!",
-      });
-      setIsLoading(false);
+    if (!issue) {
+      try {
+        await axios.post("/api/issues", values);
+        toast({
+          title: "Success",
+          className: "bg-emerald-600 text-white border-black",
+          description: "You have successfully added a new issue!",
+        });
+        setIsLoading(false);
+        router.push("/issues");
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Unexpected Error!",
+          description: "Oops! Unhandled error occured!",
+        });
+        setIsLoading(false);
+      }
+    } else {
+      try {
+        await axios.patch("/api/issues/" + issue.id, values);
+        toast({
+          title: "Success",
+          className: "bg-emerald-600 text-white border-black",
+          description: "You have successfully updated an issue!",
+        });
+        setIsLoading(false);
+        router.push("/issues/" + issue.id);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Unexpected Error!",
+          description: "Oops! Unhandled error occured!",
+        });
+        setIsLoading(false);
+      }
     }
   }
 
   return (
-    <div className="w-[500px] flex">
-      {" "}
+    <div className="w-[500px] flex flex-col gap-5">
+      <div className="flex gap-2 items-center">
+        <h1 className="font-bold text-2xl">
+          {!issue ? "Create an issue" : "Edit an issue"}
+        </h1>
+        {!issue ? <Plus /> : <SquarePenIcon />}
+      </div>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
