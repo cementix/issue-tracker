@@ -1,4 +1,4 @@
-import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
+import IssueStatusBadge from "@/components/shared/navbar/IssueStatusBadge";
 import {
   Table,
   TableBody,

@@ -1,4 +1,4 @@
-import IssueStatusBadge from "@/components/shared/IssueStatusBadge";
+import IssueStatusBadge from "@/components/shared/navbar/IssueStatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Issue } from "@prisma/client";
 import ReactMarkdown from "react-markdown";
