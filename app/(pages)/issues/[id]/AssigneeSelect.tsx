@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@prisma/client";
+import { Issue, User } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -14,7 +14,7 @@ import {
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const AsigneeSelect = () => {
+const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   const {
     data: users,
     error,
@@ -31,17 +31,27 @@ const AsigneeSelect = () => {
   if (error) return null;
 
   return (
-    <Select>
+    <Select
+      defaultValue={issue.assignedToUserId || "unassigned"}
+      onValueChange={(userId) => {
+        axios.patch("/api/issues/" + issue.id, {
+          assignedToUserId: userId || null,
+        });
+      }}
+    >
       <SelectTrigger className="w-[200px]">
         <SelectValue placeholder="Assign.." />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="unassigned">Unassigned</SelectItem>
         {users?.map((user) => (
-          <SelectItem value={user.name!}>{user.name}</SelectItem>
+          <SelectItem value={user.id!} key={user.id}>
+            {user.name}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
   );
 };
 
-export default AsigneeSelect;
+export default AssigneeSelect;
