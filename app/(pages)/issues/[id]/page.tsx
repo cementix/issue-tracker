@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import AsigneeSelect from "./AsigneeSelect";
 import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
@@ -26,6 +27,7 @@ const IssuePage = async ({ params }: { params: { id: string } }) => {
       <div className="flex gap-3 flex-col">
         {session && (
           <>
+            <AsigneeSelect />
             <EditIssueButton issueId={issue.id} />
             <DeleteIssueButton issueId={issue.id} />
           </>
