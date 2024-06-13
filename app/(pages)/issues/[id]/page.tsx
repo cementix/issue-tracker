@@ -7,6 +7,7 @@ import AssigneeSelect from "./AssigneeSelect";
 import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
+import StatusSelect from "./StatusSelect";
 
 const IssuePage = async ({ params }: { params: { id: string } }) => {
   if (typeof params.id !== "string") notFound();
@@ -28,6 +29,7 @@ const IssuePage = async ({ params }: { params: { id: string } }) => {
         {session && (
           <>
             <AssigneeSelect issue={issue} />
+            <StatusSelect issue={issue} />
             <EditIssueButton issueId={issue.id} />
             <DeleteIssueButton issueId={issue.id} />
           </>

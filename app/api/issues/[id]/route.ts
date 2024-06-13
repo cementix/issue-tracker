@@ -42,6 +42,7 @@ export async function PATCH(
       },
       data: body,
     });
+
     return NextResponse.json(updatedIssue, { status: 200 });
   } else {
     const { assignedToUserId, ...rest } = body;
@@ -51,6 +52,7 @@ export async function PATCH(
       },
       data: { ...rest, assignedToUserId: null },
     });
+
     return NextResponse.json(updatedIssue, { status: 200 });
   }
 }
