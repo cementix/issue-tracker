@@ -15,29 +15,24 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
-  const {
-    data: users,
-    error,
-    isLoading,
-  } = useQuery<User[]>({
-    queryKey: ["users"],
-    queryFn: () => axios.get("/api/users").then((res) => res.data),
-    staleTime: 60 * 1000, // 60s
-    retry: 3,
-  });
+  const { data: users, error, isLoading } = useUsers();
 
   if (isLoading) return <Skeleton width={200} height={35} />;
 
   if (error) return null;
 
+  const assignIssue = (userId: string) => {
+    axios
+      .patch("/api/issues/" + issue.id, {
+        assignedToUserId: userId || null,
+      })
+      .then((res) => res.data);
+  };
+
   return (
     <Select
       defaultValue={issue.assignedToUserId || "unassigned"}
-      onValueChange={(userId) => {
-        axios.patch("/api/issues/" + issue.id, {
-          assignedToUserId: userId || null,
-        });
-      }}
+      onValueChange={(userId) => assignIssue(userId)}
     >
       <SelectTrigger className="w-[200px]">
         <SelectValue placeholder="Assign.." />
@@ -53,5 +48,13 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
     </Select>
   );
 };
+
+const useUsers = () =>
+  useQuery<User[]>({
+    queryKey: ["users"],
+    queryFn: () => axios.get("/api/users").then((res) => res.data),
+    staleTime: 60 * 1000, // 60s
+    retry: 3,
+  });
 
 export default AssigneeSelect;
