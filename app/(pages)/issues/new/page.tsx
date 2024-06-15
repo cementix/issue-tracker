@@ -5,7 +5,11 @@ import IssueFormSkeleton from "../IssueFormSkeleton";
 
 const IssueForm = dynamic(() => import("@/app/(pages)/issues/IssueForm"), {
   ssr: false,
-  loading: () => <IssueFormSkeleton />,
+  loading: () => (
+    <Suspense>
+      <IssueFormSkeleton />
+    </Suspense>
+  ),
 });
 
 const NewIssuePage = () => {
