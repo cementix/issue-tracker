@@ -3,22 +3,27 @@ import { notFound } from "next/navigation";
 
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
+import { cache } from "react";
 import AssigneeSelect from "./AssigneeSelect";
 import DeleteIssueButton from "./DeleteIssueButton";
 import EditIssueButton from "./EditIssueButton";
 import IssueDetails from "./IssueDetails";
 import StatusSelect from "./StatusSelect";
 
-const IssuePage = async ({ params }: { params: { id: string } }) => {
+type IssuePageProps = {
+  params: { id: string };
+};
+
+const fetchIssue = cache((issueId: string) =>
+  prisma.issue.findUnique({ where: { id: issueId } })
+);
+
+const IssuePage = async ({ params }: IssuePageProps) => {
   if (typeof params.id !== "string") notFound();
 
   const session = await getServerSession(authOptions);
 
-  const issue = await prisma.issue.findUnique({
-    where: {
-      id: params.id,
-    },
-  });
+  const issue = await fetchIssue(params.id);
 
   if (!issue) notFound();
 
@@ -38,5 +43,14 @@ const IssuePage = async ({ params }: { params: { id: string } }) => {
     </main>
   );
 };
+
+export async function generateMetadata({ params }: IssuePageProps) {
+  const issue = await fetchIssue(params.id);
+
+  return {
+    title: "Issue Tracker - " + issue?.title,
+    description: "Details of issue " + issue?.title,
+  };
+}
 
 export default IssuePage;

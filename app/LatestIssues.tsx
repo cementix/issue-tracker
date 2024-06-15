@@ -11,7 +11,7 @@ const LatestIssues = async () => {
     orderBy: {
       createdAt: "desc",
     },
-    take: 5,
+    take: 9,
     include: {
       assignedTo: true,
     },
@@ -24,7 +24,7 @@ const LatestIssues = async () => {
         <Table>
           <TableBody>
             {issues.map((issue) => (
-              <TableRow>
+              <TableRow key={issue.id}>
                 <TableCell className="flex justify-between">
                   <div className="flex flex-col items-start">
                     <Link

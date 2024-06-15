@@ -10,6 +10,7 @@ import {
 import prisma from "@/lib/db";
 import { Issue, IssueStatus } from "@prisma/client";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import IssueActions from "./IssueActions";
 import Pagination from "./Pagination";
@@ -150,3 +151,8 @@ const IssuesPage = async ({
 export const dynamic = "force-dynamic";
 
 export default IssuesPage;
+
+export const metadata: Metadata = {
+  title: "Issue Tracker - List",
+  description: "Page dedicated for inspecting all issues",
+};
