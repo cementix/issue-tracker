@@ -14,5 +14,5 @@ export const updateIssueSchema = z.object({
   title: z.string().min(1).max(255).optional(),
   description: z.string().min(1).max(65535).optional(),
   assignedToUserId: z.string().nullable().optional(),
-  status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]),
+  status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]).optional(),
 });

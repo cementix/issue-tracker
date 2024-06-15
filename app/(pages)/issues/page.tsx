@@ -118,9 +118,7 @@ const IssuesPage = async ({
             <TableRow key={issue.id}>
               <TableCell className="font-medium ">
                 <Link href={`/issues/${issue.id}`}>
-                  <p className="text-blue-500 hover:underline hover:text-blue-700">
-                    {issue.title}
-                  </p>
+                  <p className="hover:underline">{issue.title}</p>
                   <IssueStatusBadge
                     className="table-cell max-w-fit md:hidden"
                     status={issue.status}
