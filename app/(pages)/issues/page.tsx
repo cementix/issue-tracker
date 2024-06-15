@@ -21,6 +21,7 @@ const columns: {
   { label: "Issue", value: "title" },
   { label: "Status", value: "status", className: "hidden md:table-cell" },
   { label: "Posted", value: "createdAt", className: "hidden md:table-cell" },
+  { label: "Updated", value: "updatedAt", className: "hidden md:table-cell" },
 ];
 
 const formatDate = (dateString: Date) => {
@@ -48,10 +49,17 @@ const IssuesPage = async ({
     ? searchParams.status
     : undefined;
 
-  const orderBy: { [key in keyof Issue]?: "asc" | "desc" } = {};
-  if (searchParams.orderBy) {
-    orderBy[searchParams.orderBy] = searchParams.orderDirection || "asc";
-  }
+  const sortOrderDirection =
+    searchParams.orderDirection === "asc" ||
+    searchParams.orderDirection === "desc"
+      ? searchParams.orderDirection
+      : "asc";
+
+  const orderBy = columns
+    .map((column) => column.value)
+    .includes(searchParams.orderBy)
+    ? { [searchParams.orderBy]: sortOrderDirection }
+    : undefined;
 
   const issues = await prisma.issue.findMany({
     where: {
@@ -69,7 +77,7 @@ const IssuesPage = async ({
             {columns.map((column) => {
               const newOrderDirection =
                 searchParams.orderBy === column.value &&
-                searchParams.orderDirection === "asc"
+                sortOrderDirection === "asc"
                   ? "desc"
                   : "asc";
               return (
@@ -116,6 +124,9 @@ const IssuesPage = async ({
               </TableCell>
               <TableCell className="hidden md:table-cell">
                 {formatDate(issue.createdAt)}
+              </TableCell>
+              <TableCell className="hidden md:table-cell">
+                {formatDate(issue.updatedAt)}
               </TableCell>
             </TableRow>
           ))}
