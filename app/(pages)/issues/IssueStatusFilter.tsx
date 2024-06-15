@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { IssueStatus } from "@prisma/client";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 const statuses: { label: string; value?: IssueStatus }[] = [
   { label: "All" },
@@ -22,31 +23,36 @@ const IssueStatusFilter = () => {
   const searchParams = useSearchParams();
 
   return (
-    <Select
-      defaultValue={searchParams.get("status") || "ALL"}
-      onValueChange={(status) => {
-        const params = new URLSearchParams();
-        status && params.append("status", status);
-        searchParams.get("orderBy") &&
-          params.append("orderBy", searchParams.get("orderBy")!);
-        searchParams.get("orderDirection") &&
-          params.append("orderDirection", searchParams.get("orderDirection")!);
+    <Suspense>
+      <Select
+        defaultValue={searchParams.get("status") || "ALL"}
+        onValueChange={(status) => {
+          const params = new URLSearchParams();
+          status && params.append("status", status);
+          searchParams.get("orderBy") &&
+            params.append("orderBy", searchParams.get("orderBy")!);
+          searchParams.get("orderDirection") &&
+            params.append(
+              "orderDirection",
+              searchParams.get("orderDirection")!
+            );
 
-        const query = params.size ? "?" + params.toString() : "";
-        router.push("/issues" + query);
-      }}
-    >
-      <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Filter by status" />
-      </SelectTrigger>
-      <SelectContent>
-        {statuses.map((status) => (
-          <SelectItem value={status.value || "ALL"} key={status.value}>
-            {status.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+          const query = params.size ? "?" + params.toString() : "";
+          router.push("/issues" + query);
+        }}
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Filter by status" />
+        </SelectTrigger>
+        <SelectContent>
+          {statuses.map((status) => (
+            <SelectItem value={status.value || "ALL"} key={status.value}>
+              {status.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </Suspense>
   );
 };
 
