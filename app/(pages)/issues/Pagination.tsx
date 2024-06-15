@@ -29,7 +29,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: PaginationProps) => {
   };
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 items-center ml-3">
       <p>
         Page {currentPage} of {pageCount}
       </p>

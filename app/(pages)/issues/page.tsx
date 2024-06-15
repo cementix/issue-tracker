@@ -77,7 +77,7 @@ const IssuesPage = async ({
   const issueCount = await prisma.issue.count({ where });
 
   return (
-    <main>
+    <main className="flex flex-col gap-3">
       <IssueActions />
       <Table className="max-w-[1000px]">
         <TableHeader>
