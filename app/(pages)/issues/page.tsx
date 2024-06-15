@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/table";
 import prisma from "@/lib/db";
 import { Issue, IssueStatus } from "@prisma/client";
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
+import { ArrowDownIcon, ArrowUpIcon, Loader } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import IssueActions from "./IssueActions";
 import Pagination from "./Pagination";
 
@@ -78,73 +79,75 @@ const IssuesPage = async ({
   const issueCount = await prisma.issue.count({ where });
 
   return (
-    <main className="flex flex-col gap-3">
-      <IssueActions />
-      <Table className="max-w-[1000px]">
-        <TableHeader>
-          <TableRow>
-            {columns.map((column) => {
-              const newOrderDirection =
-                searchParams.orderBy === column.value &&
-                sortOrderDirection === "asc"
-                  ? "desc"
-                  : "asc";
-              return (
-                <TableHead className={column.className} key={column.value}>
-                  <Link
-                    href={{
-                      query: {
-                        ...searchParams,
-                        orderBy: column.value,
-                        orderDirection: newOrderDirection,
-                      },
-                    }}
-                    className="flex gap-1 items-center"
-                  >
-                    {column.label}
-                    {searchParams.orderBy === column.value &&
-                      (searchParams.orderDirection === "asc" ? (
-                        <ArrowUpIcon width={20} height={20} />
-                      ) : (
-                        <ArrowDownIcon width={20} height={20} />
-                      ))}
-                  </Link>
-                </TableHead>
-              );
-            })}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {issues.map((issue) => (
-            <TableRow key={issue.id}>
-              <TableCell className="font-medium ">
-                <Link href={`/issues/${issue.id}`}>
-                  <p className="hover:underline">{issue.title}</p>
-                  <IssueStatusBadge
-                    className="table-cell max-w-fit md:hidden"
-                    status={issue.status}
-                  />
-                </Link>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                <IssueStatusBadge status={issue.status} />
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                {formatDate(issue.createdAt)}
-              </TableCell>
-              <TableCell className="hidden md:table-cell">
-                {formatDate(issue.updatedAt)}
-              </TableCell>
+    <Suspense fallback={<Loader className="animate-spin" />}>
+      <main className="flex flex-col gap-3">
+        <IssueActions />
+        <Table className="max-w-[1000px]">
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => {
+                const newOrderDirection =
+                  searchParams.orderBy === column.value &&
+                  sortOrderDirection === "asc"
+                    ? "desc"
+                    : "asc";
+                return (
+                  <TableHead className={column.className} key={column.value}>
+                    <Link
+                      href={{
+                        query: {
+                          ...searchParams,
+                          orderBy: column.value,
+                          orderDirection: newOrderDirection,
+                        },
+                      }}
+                      className="flex gap-1 items-center"
+                    >
+                      {column.label}
+                      {searchParams.orderBy === column.value &&
+                        (searchParams.orderDirection === "asc" ? (
+                          <ArrowUpIcon width={20} height={20} />
+                        ) : (
+                          <ArrowDownIcon width={20} height={20} />
+                        ))}
+                    </Link>
+                  </TableHead>
+                );
+              })}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Pagination
-        pageSize={pageSize}
-        currentPage={page}
-        itemCount={issueCount}
-      />
-    </main>
+          </TableHeader>
+          <TableBody>
+            {issues.map((issue) => (
+              <TableRow key={issue.id}>
+                <TableCell className="font-medium ">
+                  <Link href={`/issues/${issue.id}`}>
+                    <p className="hover:underline">{issue.title}</p>
+                    <IssueStatusBadge
+                      className="table-cell max-w-fit md:hidden"
+                      status={issue.status}
+                    />
+                  </Link>
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  <IssueStatusBadge status={issue.status} />
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {formatDate(issue.createdAt)}
+                </TableCell>
+                <TableCell className="hidden md:table-cell">
+                  {formatDate(issue.updatedAt)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Pagination
+          pageSize={pageSize}
+          currentPage={page}
+          itemCount={issueCount}
+        />
+      </main>
+    </Suspense>
   );
 };
 
