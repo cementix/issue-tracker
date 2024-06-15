@@ -52,7 +52,6 @@ export async function PATCH(
       },
       data: { ...rest, assignedToUserId: null },
     });
-
     return NextResponse.json(updatedIssue, { status: 200 });
   }
 }
