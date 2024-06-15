@@ -1,8 +1,10 @@
 import Navbar from "@/components/shared/navbar/Navbar";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { Loader } from "lucide-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Suspense } from "react";
 import AuthProvider from "./auth/AuthProvider";
 import "./globals.css";
 import QueryClientProvider from "./QueryClientProvider";
@@ -25,9 +27,11 @@ export default function RootLayout({
         <QueryClientProvider>
           <AuthProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <Navbar />
-              <main className="ml-8 mt-7">{children}</main>
-              <Toaster />
+              <Suspense fallback={<Loader className="animate-spin" />}>
+                <Navbar />
+                <main className="ml-8 mt-7">{children}</main>
+                <Toaster />
+              </Suspense>
             </ThemeProvider>
           </AuthProvider>
         </QueryClientProvider>
