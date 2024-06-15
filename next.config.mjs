@@ -36,4 +36,7 @@ export default withSentryConfig(nextConfig, {
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
   telemetry: false,
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 });
