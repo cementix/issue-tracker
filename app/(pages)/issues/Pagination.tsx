@@ -8,6 +8,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 type PaginationProps = {
   itemCount: number;
@@ -29,43 +30,45 @@ const Pagination = ({ itemCount, pageSize, currentPage }: PaginationProps) => {
   };
 
   return (
-    <div className="flex gap-2 items-center ml-3">
-      <p>
-        Page {currentPage} of {pageCount}
-      </p>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={currentPage === 1}
-        onClick={() => changePage(1)}
-      >
-        <ChevronsLeft />
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={currentPage === 1}
-        onClick={() => changePage(currentPage - 1)}
-      >
-        <ChevronLeft />
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={currentPage === pageCount}
-        onClick={() => changePage(currentPage + 1)}
-      >
-        <ChevronRight />
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={currentPage === pageCount}
-        onClick={() => changePage(pageCount)}
-      >
-        <ChevronsRight />
-      </Button>
-    </div>
+    <Suspense>
+      <div className="flex gap-2 items-center ml-3">
+        <p>
+          Page {currentPage} of {pageCount}
+        </p>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={currentPage === 1}
+          onClick={() => changePage(1)}
+        >
+          <ChevronsLeft />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={currentPage === 1}
+          onClick={() => changePage(currentPage - 1)}
+        >
+          <ChevronLeft />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={currentPage === pageCount}
+          onClick={() => changePage(currentPage + 1)}
+        >
+          <ChevronRight />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={currentPage === pageCount}
+          onClick={() => changePage(pageCount)}
+        >
+          <ChevronsRight />
+        </Button>
+      </div>
+    </Suspense>
   );
 };
 
