@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { IssueStatus } from "@prisma/client";
+import { Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
@@ -23,7 +24,7 @@ const IssueStatusFilter = () => {
   const searchParams = useSearchParams();
 
   return (
-    <Suspense>
+    <Suspense fallback={<Loader className="animate-spin" />}>
       <Select
         defaultValue={searchParams.get("status") || "ALL"}
         onValueChange={(status) => {

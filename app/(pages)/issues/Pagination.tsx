@@ -6,6 +6,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Loader,
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -30,7 +31,7 @@ const Pagination = ({ itemCount, pageSize, currentPage }: PaginationProps) => {
   };
 
   return (
-    <Suspense>
+    <Suspense fallback={<Loader className="animate-spin" />}>
       <div className="flex gap-2 items-center ml-3">
         <p>
           Page {currentPage} of {pageCount}
