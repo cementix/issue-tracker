@@ -31,6 +31,7 @@ const DeleteIssueButton = ({ issueId }: { issueId: string }) => {
         description: "You have successfully deleted an issue!",
       });
       router.push("/issues");
+      router.refresh();
       setIsLoading(false);
     } catch (error) {
       toast({

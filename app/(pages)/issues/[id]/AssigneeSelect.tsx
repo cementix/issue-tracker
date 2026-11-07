@@ -3,6 +3,7 @@
 import { Issue, User } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import {
   Select,
@@ -15,6 +16,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+  const router = useRouter();
   const { data: users, error, isLoading } = useUsers();
 
   if (isLoading) return <Skeleton width={200} height={35} />;
@@ -26,7 +28,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
       .patch("/api/issues/" + issue.id, {
         assignedToUserId: userId || null,
       })
-      .then((res) => res.data);
+      .then(() => router.refresh());
   };
 
   return (
@@ -50,7 +52,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 };
 
 const useUsers = () =>
-  useQuery<User[]>({
+  useQuery<Pick<User, "id" | "name">[]>({
     queryKey: ["users"],
     queryFn: () => axios.get("/api/users").then((res) => res.data),
     staleTime: 60 * 1000, // 60s

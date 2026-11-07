@@ -23,6 +23,11 @@ const LatestIssues = async () => {
       <CardContent>
         <Table>
           <TableBody>
+            {issues.length === 0 && (
+              <TableRow>
+                <TableCell>No issues yet.</TableCell>
+              </TableRow>
+            )}
             {issues.map((issue) => (
               <TableRow key={issue.id}>
                 <TableCell className="flex justify-between">

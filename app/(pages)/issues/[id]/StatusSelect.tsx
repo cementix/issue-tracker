@@ -2,6 +2,7 @@
 
 import { Issue, IssueStatus } from "@prisma/client";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import {
   Select,
@@ -13,6 +14,7 @@ import {
 import "react-loading-skeleton/dist/skeleton.css";
 
 const StatusSelect = ({ issue }: { issue: Issue }) => {
+  const router = useRouter();
   const statuses: { label: string; value: IssueStatus }[] = [
     { label: "Open", value: "OPEN" },
     { label: "In progress", value: "IN_PROGRESS" },
@@ -24,7 +26,7 @@ const StatusSelect = ({ issue }: { issue: Issue }) => {
       .patch("/api/issues/" + issue.id, {
         status: status,
       })
-      .then((res) => res.data);
+      .then(() => router.refresh());
   };
 
   return (

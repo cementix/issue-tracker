@@ -53,6 +53,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         });
         setIsLoading(false);
         router.push("/issues");
+        router.refresh();
       } catch (error) {
         toast({
           variant: "destructive",
@@ -71,6 +72,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         });
         setIsLoading(false);
         router.push("/issues/" + issue.id);
+        router.refresh();
       } catch (error) {
         toast({
           variant: "destructive",

@@ -1,7 +1,7 @@
 # Issue Tracker
 
 A full-stack **issue tracking system** built with Next.js, Prisma, NextAuth, Radix UI, and React Query.  
-It allows authenticated users to create, assign, and manage issues in real time, providing a clear structure for team collaboration and bug reporting.
+Visitors can browse issues and see the dashboard. Sign in with Google to create, edit, assign, or delete issues.
 
 ---
 
@@ -24,7 +24,7 @@ This project can serve as:
 | Framework | [Next.js 14](https://nextjs.org) |
 | Language | TypeScript |
 | ORM | [Prisma](https://www.prisma.io) |
-| Database | PostgreSQL / SQLite |
+| Database | PostgreSQL |
 | Authentication | [NextAuth.js](https://next-auth.js.org) |
 | UI Library | [Radix UI](https://www.radix-ui.com) + Tailwind CSS |
 | State Management | [React Query](https://tanstack.com/query) |
@@ -68,35 +68,18 @@ cd issue-tracker
 ### 2. Install dependencies
 
 ```bash
-npm install
-# or
-yarn install
-# or
-pnpm install
+yarn install --frozen-lockfile
 ```
 
 ### 3. Environment variables
 
-Create a `.env` file in the root folder:
+Copy `.env.example` to `.env`. Set `DATABASE_URL` to a PostgreSQL database for this app and generate a secret for `NEXTAUTH_SECRET`:
 
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/issue-tracker"
-
-NEXTAUTH_SECRET="your_random_secret"
-NEXTAUTH_URL="http://localhost:3000"
-
-SENTRY_AUTH_TOKEN="your_sentry_token"
-
-# Optional (if using external services)
-CLOUDINARY_API_KEY=""
-CLOUDINARY_API_SECRET=""
+```bash
+node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
 ```
 
-> For local development, you can switch to SQLite:
->
-> ```
-> DATABASE_URL="file:./dev.db"
-> ```
+Google is the only sign-in provider. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` from a Google OAuth web application. Register `http://localhost:3000/api/auth/callback/google` as an authorized redirect URI. For deployment, set `NEXTAUTH_URL` to the site's HTTPS origin and register the same callback path on that origin.
 
 ---
 
@@ -109,11 +92,21 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
+A new database starts with zero issues and zero users. The first Google sign-in creates a user.
+
 Inspect your data with Prisma Studio:
 
 ```bash
 npx prisma studio
 ```
+
+To empty an existing installation, first verify that the connection points to the intended database. The following command permanently removes all issues, users, and sign-in records while preserving the schema and migration history:
+
+```bash
+npx prisma db execute --schema prisma/schema.prisma --file scripts/reset-data.sql
+```
+
+On the deployed app, also rotate `NEXTAUTH_SECRET` and redeploy to invalidate existing browser sessions.
 
 ---
 
@@ -147,37 +140,14 @@ npm run lint
 * 🧾 Create, edit, and delete issues
 * 👥 Assign issues to users
 * 🔐 Authentication & session handling (NextAuth)
-* ⚡ Real-time updates with React Query
+* 📊 Dashboard with issue counts and the latest issues, refreshed after changes
 * 🎨 Clean and accessible UI with Radix + Tailwind
 * 📈 Error tracking integrated via Sentry
 * 🧩 Scalable modular architecture
 
 ---
 
-## 🗃 Example Prisma Schema
-
-```prisma
-model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String   @unique
-  password  String
-  issues    Issue[]  @relation("AssignedIssues")
-  createdAt DateTime @default(now())
-}
-
-model Issue {
-  id          String   @id @default(cuid())
-  title       String
-  description String
-  status      String   @default("open")
-  priority    String   @default("medium")
-  assignee    User?    @relation("AssignedIssues", fields: [assigneeId], references: [id])
-  assigneeId  String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-```
+The [Prisma schema](prisma/schema.prisma) defines issues, their statuses and assignments, and the tables used for Google sign-in.
 
 ---
 
@@ -206,21 +176,18 @@ Steps:
 
 | Method                    | Route                        | Description |
 | ------------------------- | ---------------------------- | ----------- |
-| `GET /api/issues`         | Get all issues               |             |
 | `POST /api/issues`        | Create a new issue           |             |
-| `GET /api/issues/[id]`    | Get issue details            |             |
 | `PATCH /api/issues/[id]`  | Update issue                 |             |
 | `DELETE /api/issues/[id]` | Delete issue                 |             |
 | `GET /api/users`          | Get user list for assignment |             |
-| `POST /api/auth/signin`   | User login                   |             |
-| `POST /api/auth/signup`   | User registration            |             |
+| `GET /api/auth/signin`    | Google sign-in page          |             |
 
 ---
 
 ## 🧤 Developer Notes
 
 * Protected routes managed via `middleware.ts`
-* All API logic lives under `/pages/api`
+* API route handlers live under `app/api`
 * `instrumentation.ts` initializes Sentry for error tracing
 * Radix UI components are wrapped in Tailwind for styling consistency
 * React Query manages data fetching and cache invalidation
